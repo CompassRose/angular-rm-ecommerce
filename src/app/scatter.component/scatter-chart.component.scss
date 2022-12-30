@@ -1,0 +1,72 @@
+#scatter-chart {
+  width: 100% !important;
+  height: 500px !important;
+}
+
+
+.form-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+}
+
+#origin {
+  width: 80px;
+}
+
+#destination {
+  width: 80px;
+}
+
+
+
+.centered-group {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: row;
+
+  .center-input {
+    text-align: center !important;
+    margin-left: 3px;
+    max-height: 20px !important;
+    max-width: 35px !important;
+  }
+}
+
+
+
+
+.control-row {
+  padding-top: 5px;
+  margin-left: 6px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 14px;
+
+  .color-select {
+    min-width: 300px;
+
+    .color-row {
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+
+      .color-square {
+        z-index: 10;
+        width: 10px !important;
+        height: 10px !important;
+      }
+    }
+  }
+}
