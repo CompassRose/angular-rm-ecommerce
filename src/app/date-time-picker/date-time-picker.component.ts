@@ -13,14 +13,17 @@ import {
     NgbTimeStruct,
     NgbDateStruct,
     NgbPopoverConfig,
+    NgbDate,
     NgbPopover,
     NgbDatepicker
 } from "@ng-bootstrap/ng-bootstrap";
+
 import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor,
     NgControl
 } from "@angular/forms";
+
 import { DatePipe } from "@angular/common";
 import { DateTimeModel } from "./date-time-model";
 import { noop } from "rxjs";
@@ -71,7 +74,8 @@ export class DateTimePickerComponent implements ControlValueAccessor, OnInit, Af
     }
 
     @ViewChild(NgbDatepicker, { static: true })
-    private dp: NgbDatepicker;
+
+    public dp: NgbDatepicker;
 
     @ViewChild(NgbPopover, { static: true })
     private popover: NgbPopover;
@@ -87,19 +91,27 @@ export class DateTimePickerComponent implements ControlValueAccessor, OnInit, Af
     }
 
     ngOnInit(): void {
+        const date: NgbDate = new NgbDate(1789, 7, 14);
+        this.selected.year = date.year
+        this.selected.month = date.month
+        this.selected.day = date.day
+        console.log('\n\n\n ----   this.selected. ', this.selected)
         this.ngControl = this.inj.get(NgControl);
-        // console.log('this.ngControl  ', this.ngControl)
+        //console.log('this.ngControl  ', this.ngControl)
     }
 
     ngAfterViewInit(): void {
         this.popover.hidden.subscribe($event => {
             this.showTimePickerToggle = false;
         });
+        console.log('select ', this.selected)
     }
 
+
     writeValue(newModel: string) {
-        console.log('writeValue newModel ', newModel)
+
         if (newModel) {
+            console.log('writeValue newModel ', newModel)
             this.datetime = Object.assign(
                 this.datetime,
                 DateTimeModel.fromLocalString(newModel)

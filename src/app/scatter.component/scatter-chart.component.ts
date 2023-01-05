@@ -1,5 +1,4 @@
 import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
-
 import { ContinousColors } from '../constants'
 import * as echarts from 'echarts';
 import { EChartsOption } from 'echarts';
@@ -11,7 +10,7 @@ import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@ang
 import { formatDate } from '@angular/common';
 import { DatePipe } from '@angular/common';
 import { DateTimePickerComponent } from "../date-time-picker/date-time-picker.component";
-
+import { NgbdDatepickerRangePopup } from '../date-range-picker/datepicker-range.component';
 
 //import moment from 'moment';
 
@@ -28,8 +27,9 @@ import {
     ValueParserParams,
     RowModelType,
 } from 'ag-grid-community';
-import { PurchaseHistoryService } from '../purchase-history.service';
 
+
+import { PurchaseHistoryService } from '../purchase-history.service';
 
 export interface ColorObject {
     key: string;
@@ -47,13 +47,13 @@ export const DateTimeValidator = (fc: FormControl) => {
     };
 };
 
-
 @Component({
     selector: 'scatter-chart',
     templateUrl: './scatter-chart.component.html',
     styleUrls: ['./scatter-chart.component.scss'],
-    providers: [DateTimePickerComponent]
+    providers: [DateTimePickerComponent, NgbdDatepickerRangePopup]
 })
+
 
 export class ScatterChartComponent implements OnInit, AfterViewInit {
 
@@ -235,7 +235,6 @@ export class ScatterChartComponent implements OnInit, AfterViewInit {
             cellClass: 'my-class',
             width: 165
         },
-
     ];
 
 
@@ -254,8 +253,8 @@ export class ScatterChartComponent implements OnInit, AfterViewInit {
 
     public gridApi: GridApi;
 
-
     constructor(public dateTimePickerComponent: DateTimePickerComponent,
+        public NgbdDatepickerRangePopup: NgbdDatepickerRangePopup,
         private dashboardAPI: DashboardApi,
         private formBuilder: FormBuilder,
         public purchaseHistoryService: PurchaseHistoryService) {
@@ -271,6 +270,8 @@ export class ScatterChartComponent implements OnInit, AfterViewInit {
         this.purchaseHistoryService.transactionDateTo = moment(timeHolder).format('M/D/YYYY hh:mm A');
 
         console.log('day transactionDateTo ', this.purchaseHistoryService.transactionDateTo)
+
+        console.log('$$$$$$$ ', NgbdDatepickerRangePopup)
 
         this.purchaseHistoryService.departureDate = moment('01/01/2020, 11:00 AM', "M/D/YYYY hh:mm A").format('hh:mm A');
 
@@ -313,7 +314,7 @@ export class ScatterChartComponent implements OnInit, AfterViewInit {
                     let metricHolder = [];
                     let holderAry = [];
 
-                    //console.log('event ', event)
+                    console.log('event ', event)
 
                     setTimeout(() => {
                         Object.entries(event).forEach((d: any, i) => {
@@ -332,7 +333,7 @@ export class ScatterChartComponent implements OnInit, AfterViewInit {
                             metricHolder.forEach((d: any, i) => {
                                 if (word[d[0]] === d[1]) {
                                     lgth++;
-                                    // console.log(' lgth ', lgth)
+
 
                                 } else {
                                     // console.log('           NOPE  i', i, ' j ', j, ' word[d[0]] ', word[d[0]], ' d ', d[1])
@@ -342,8 +343,11 @@ export class ScatterChartComponent implements OnInit, AfterViewInit {
                                 holderAry.push(word)
                             }
                         })
+                        // console.log(' holderAry ', holderAry)
 
                         this.purchaseHistoryService.transactionData = holderAry;
+
+
                         this.purchaseHistoryService.transactionDataBehaviorSubject$.next(holderAry)
                     })
 
@@ -355,27 +359,38 @@ export class ScatterChartComponent implements OnInit, AfterViewInit {
 
     public getDepartureDate(ev, type) {
 
-        console.log('getDepartureDate }}}}}}}}}}   getCloseNotification ', ev)
+        // console.log('getDepartureDate }}}}}}}}}}   getCloseNotification ', ev)
 
-        if (type === 'dd') {
-            console.log('getDepartureDate }}}}}}}}}}   getCloseNotification ', ev)
-            let newDate = new Date(ev)
+        if (type === 'ddf' && ev) {
+
+            console.log('getDepartureDate }}}}}}}}}}   getCloseNotification FROM ', ev)
+
+            let newDate = new Date(ev);
+
             let timer = moment(newDate, "M/D/YYYY hh:mm A");
+
             this.purchaseHistoryService.departureDate = moment(ev).format('M/D/YYYY hh:mm A');
 
             let durationToAdd = moment.duration(5, 'days');
 
             const timey = timer.add(durationToAdd).format('M/D/YYYY hh:mm A');
 
-            //this.purchaseHistoryService.departureDateTo = moment(timey).format('M/D/YYYY hh:mm A');
+            this.purchaseHistoryService.departureDateTo = moment(timey).format('M/D/YYYY hh:mm A');
 
             this.rangeSelector.patchValue({ departureDate: this.purchaseHistoryService.departureDate })
+
+            this.dateTimePickerComponent.selected = this.purchaseHistoryService.departureDate;
+
+        } else if (type === 'ddt') {
+
+            console.log('getDepartureDate    getCloseNotification TO ', ev)
         }
     }
 
 
     public getTransactionDate(ev, type) {
-        if (type === 'td') {
+
+        if (type === 'td' && ev) {
             console.log('\n\n\n getTransactionDate ', ev)
             let newDate = new Date(ev)
             let timer = moment(newDate, "M/D/YYYY hh:mm A");

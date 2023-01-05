@@ -19,6 +19,7 @@ import {
 import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
 import { FlightPurchaseComponent } from './flight-purchase/flight-purchase.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,

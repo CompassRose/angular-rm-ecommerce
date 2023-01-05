@@ -106,6 +106,7 @@ export class PurchaseHistoryService implements AfterViewInit {
 
         })
 
+
         let timer = moment('01/01/2020, 11:00 AM', "M/D/YYYY hh:mm A");
 
         let durationToAdd = moment.duration(30, 'minutes');
@@ -119,19 +120,24 @@ export class PurchaseHistoryService implements AfterViewInit {
 
           if (i % 120 === 0) {
             dayHolder = timer.add(dayToAdd).format('M/D/YYYY');
-            dayTemp = moment(`${dayHolder}, 11:00 AM`, "M/D hh:mm A");
-            t.transactionTime = moment(dayTemp).format("M/D hh:mm A");
+            dayTemp = moment(`${dayHolder}, 11:00 AM`, "M/D/YYYY hh:mm A");
+            t.transactionTime = moment(dayTemp).format("M/D/YYYY hh:mm A");
           } else {
-            const timeHolder = dayTemp.add(durationToAdd).format('M/D hh:mm A');
+            const timeHolder = dayTemp.add(durationToAdd).format('M/D/YYYY hh:mm A');
             t.transactionTime = timeHolder
 
           }
 
           return t
         })
+        console.log('XXXXX ', this.transactionData[0].transactionTime)
+
+        this.transactionDate = this.transactionData[0].transactionTime;
 
         this.departureDate = this.transactionData[0].transactionTime;
+
         this.departureDateTo = this.transactionData[this.transactionData.length - 1].transactionTime;
+
         this.transactionDataBehaviorSubject$.next(this.transactionData);
 
 

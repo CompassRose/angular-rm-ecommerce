@@ -25,7 +25,7 @@
         name="datepicker"
         [ngModel]="selected"
         (ngModelChange)="onDateChange($event, dp)"></ngb-datepicker>
-      <button class="btn btn-block btn-outline-secondary"
+      <button class="btn btn-block btn-outline-secondary w-100"
         [disabled]="!datetime?.day"
         type="button"
         (click)="toggleDateTimeState($event)">

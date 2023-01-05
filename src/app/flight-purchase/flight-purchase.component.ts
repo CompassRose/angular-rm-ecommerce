@@ -247,65 +247,66 @@ export class FlightPurchaseComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit(): void {
 
-    this.rangeSelector.valueChanges
-      .pipe(
-        debounceTime(1220),
-        distinctUntilChanged(),
-        tap((event) => {
-          let metricHolder = [];
-          let holderAry = [];
+
+    // this.rangeSelector.valueChanges
+    //   .pipe(
+    //     debounceTime(1220),
+    //     distinctUntilChanged(),
+    //     tap((event) => {
+    //       let metricHolder = [];
+    //       let holderAry = [];
 
 
 
-          setTimeout(() => {
-            Object.entries(event).forEach((d: any, i) => {
-              if (d[1] !== '' && d[1].length < 4) {
-                metricHolder.push(d);
-              } else if (d[1].length > 3) {
-                //console.log('YES DATE ', d[1])
-              }
-            })
+    //       setTimeout(() => {
+    //         Object.entries(event).forEach((d: any, i) => {
+    //           if (d[1] !== '' && d[1].length < 4) {
+    //             metricHolder.push(d);
+    //           } else if (d[1].length > 3) {
+    //             //console.log('YES DATE ', d[1])
+    //           }
+    //         })
 
-            holderAry = [];
+    //         holderAry = [];
 
-            this.transactionData.map((word, j) => {
+    //         this.transactionData.map((word, j) => {
 
-              let lgth = 0;
-              metricHolder.forEach((d: any, i) => {
-                if (word[d[0]] === d[1]) {
-                  lgth++;
-                  console.log(' lgth ', lgth)
+    //           let lgth = 0;
+    //           metricHolder.forEach((d: any, i) => {
+    //             if (word[d[0]] === d[1]) {
+    //               lgth++;
+    //               console.log(' lgth ', lgth)
 
-                } else {
-                  //console.log('           NOPE  i', i, ' j ', j, ' word[d[0]] ', word[d[0]], ' d ', d[1])
-                }
-              })
-              if (lgth === metricHolder.length) {
-                holderAry.push(word)
-              }
-            })
+    //             } else {
+    //               //console.log('           NOPE  i', i, ' j ', j, ' word[d[0]] ', word[d[0]], ' d ', d[1])
+    //             }
+    //           })
+    //           if (lgth === metricHolder.length) {
+    //             holderAry.push(word)
+    //           }
+    //         })
 
-            this.transactionData = holderAry;
-            //console.log('||||||   ', this.transactionData)
-            this.transactionDataBehaviorSubject$.next(holderAry)
-          })
+    //         this.transactionData = holderAry;
+    //         //console.log('||||||   ', this.transactionData)
+    //         this.transactionDataBehaviorSubject$.next(holderAry)
+    //       })
 
-        })
-      )
-      .subscribe()
+    //     })
+    //   )
+    //   .subscribe()
   }
 
   public createForm() {
 
     //console.log('NEW ', new Date(), ' startTime ', this.startTime)
-    this.rangeSelector = this.formBuilder.group({
-      origin: new FormControl('', [Validators.required]),
-      destination: new FormControl('', [Validators.required]),
-      transactionTimeFrom: new FormControl('', [Validators.required]),
-      transactionTimeTo: new FormControl('', [Validators.required]),
-      departureDateFrom: new FormControl(this.startTime, { validators: [Validators.required, DateTimeValidator] }),
-      departureDateTo: new FormControl(this.endTime, { validators: [Validators.required, DateTimeValidator] })
-    });
+    // this.rangeSelector = this.formBuilder.group({
+    //   origin: new FormControl('', [Validators.required]),
+    //   destination: new FormControl('', [Validators.required]),
+    //   transactionTimeFrom: new FormControl('', [Validators.required]),
+    //   transactionTimeTo: new FormControl('', [Validators.required]),
+    //   departureDateFrom: new FormControl(this.startTime, { validators: [Validators.required, DateTimeValidator] }),
+    //   departureDateTo: new FormControl(this.endTime, { validators: [Validators.required, DateTimeValidator] })
+    // });
   }
 
 
