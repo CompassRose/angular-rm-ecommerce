@@ -51,11 +51,11 @@ export class GraphChartComponent implements OnInit {
 
   public setChartOptions(): void {
 
-    console.log(' this.colorRange  setChartOptions')
+    console.log(' this.colorRange  setChartOptions');
 
     this.myChart.setOption(this.options);
 
-    const axisData = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    //const axisData = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     // this.linkData = this.purchaseHistoryService.transactionData.map((rd, i) => {
     //   const test = 0
@@ -70,19 +70,18 @@ export class GraphChartComponent implements OnInit {
     // })
 
     // console.log('this.linkData ', this.linkData)
-
-    const data = axisData.map(function (item, i) {
-
-      return Math.round(Math.random() * 1000 * (i + 1));
-
-    });
+    // const data = axisData.map(function (item, i) {
+    //   return Math.round(Math.random() * 1000 * (i + 1));
+    // });
 
     let test = {};
-    let links = []
+    let links = [];
+    let axisData = [];
     this.purchaseHistoryService.transactionData.map(function (item, i) {
 
       if (i % 2 === 0) {
         // console.log('links ', i)
+        axisData.push(item.baseFare, (item.baseFare + item.ancillary))
 
         test = {
           source: i,
