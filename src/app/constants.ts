@@ -8,4 +8,8 @@ export const ContinousColors = [
     { key: 'Blues(2)', value: ['#a3aaff', '#959cff', '#878fff', '#7a81ff', '#6c72ff', '#5d63ff', '#4e54ff', '#3d43ff', '#2a30ff', '#0714ff'] }
 ]
 
+export const calendarFill = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-fill" viewBox="0 0 16 16">
+  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5h16V4H0V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5z"/>
+</svg>`;
+
 export const clockImg = "path://M 256 8 C 119 8 8 119 8 256 s 111 248 248 248 s 248 -111 248 -248 S 393 8 256 8 Z m 0 448 c -110.5 0 -200 -89.5 -200 -200 S 145.5 56 256 56 s 200 89.5 200 200 s -89.5 200 -200 200 Z m 61.8 -104.4 l -84.9 -61.7 c -3.1 -2.3 -4.9 -5.9 -4.9 -9.7 V 116 c 0 -6.6 5.4 -12 12 -12 h 32 c 6.6 0 12 5.4 12 12 v 141.7 l 66.8 48.6 c 5.4 3.9 6.5 11.4 2.6 16.8 L 334.6 349 c -3.9 5.3 -11.4 6.5 -16.8 2.6 Z"

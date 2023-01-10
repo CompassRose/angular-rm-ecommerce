@@ -5,25 +5,23 @@
 @import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 @import "ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
 @import "ag-grid-community/dist/styles/ag-theme-material.css";
-
 @import "~@ng-select/ng-select/themes/default.theme.css";
-//@import "~bootstrap/dist/css/bootstrap.css";
+
+
 
 .chart-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  //margin: 8px 0 0 8px;
   border-top-right-radius: 6px;
   border-top-left-radius: 6px;
   background-color: white;
   border: 1px solid rgb(228, 228, 228);
 
-  .container-body {
 
+  .container-body {
     height: 100%;
   }
-
 
   .text-header-area {
     align-items: center;
@@ -36,3 +34,7 @@
     border-bottom: 1px solid rgb(228, 228, 228);
   }
 }
+
+/* Importing Bootstrap SCSS file. */
+//@import '~bootstrap/scss/bootstrap';
+//@import "~bootstrap/scss/bootstrap";

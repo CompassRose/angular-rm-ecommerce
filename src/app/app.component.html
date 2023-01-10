@@ -1,39 +1,85 @@
 <div class="m-auto mt-2 grid-placement">
 
-  <ul ngbNav
-    #nav="ngbNav"
-    class="nav-tabs">
-    <li ngbNavItem>
-      <a ngbNavLink>Time Range Selection</a>
-      <ng-template ngbNavContent>
-        <div class="m-auto mt-4">
-          <scatter-chart></scatter-chart>
-        </div>
-      </ng-template>
-    </li>
-    <li ngbNavItem>
-      <a ngbNavLink>Consumer</a>
-      <ng-template ngbNavContent>
-        <div class="m-auto mt-4">
-          <div class="form-style-row mb-4">
-            <div class="pass-select-text">Select Number of Passengers</div>
-            <form #form="ngForm"
-              class="form-style"
-              (ngSubmit)="addNumPassengers(form.value)">
-              <input type="number"
-                class="d-flex"
-                name="numPassengers"
-                [ngModel]="numPassengers > 0"
-                required
-                numPassengersAsyncValidator>
-              <button class="btn btn-primary btn-sm"
-                [disabled]="form.invalid || form.pending">Submit</button>
-            </form>
-            <div class="pass-select-value ms-4"
-              *ngIf="numPassengers > 0">Passengers Selected: {{numPassengers}}</div>
-          </div>
+  <div class="m-auto mt-4">
 
-          <ag-grid-angular #agGrid
+    <div *ngIf="rangeSelector"
+      [formGroup]="rangeSelector">
+      <div class="form-group">
+        <div class="form-row">
+          <div class="form-column">
+            <label class="form-label"
+              for="origin">Origin: </label>
+            <input id="origin"
+              class="fill-field-input"
+              type="text"
+              formControlName="origin">
+          </div>
+          <div class="form-column">
+            <label class="form-label"
+              for="destination">Destination: </label>
+            <input id="destination"
+              class="fill-field-input"
+              type="text"
+              formControlName="destination">
+          </div>
+          <div class="date-time-container">
+            <label class="form-label"
+              for="transactionTimeFrom">Transaction Time From - To: </label>
+            <div class="dt-results">
+              <input type="text"
+                placeholder="Select Date/Time Range"
+                class="fill-field-input w-100"
+                [isOpen]="isTransactionTimeOpen"
+                formControlName="transactionTimeFrom"
+                [bsConfig]="{withTimepicker: true, rangeInputFormat : 'MMMM Do YYYY, h:mm:ss a', dateInputFormat: 'MMMM Do YYYY, h:mm:ss a'}"
+                bsDaterangepicker>
+              <div>
+                <div class="calendar-toggle"
+                  (click)="toggleTransactionOpenState()">
+                  <i i-bs
+                    class="icon-place"
+                    name="calendar-fill"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="date-time-container">
+            <label class="form-label"
+              for="departureDateFrom">Departure Time From - To: </label>
+            <div class="dt-results">
+              <input type="text"
+                placeholder="Select Date/Time Range"
+                class="fill-field-inputw-100"
+                [isOpen]="isDepartureTimeOpen"
+                formControlName="departureDateFrom"
+                [bsConfig]="{withTimepicker: true, rangeInputFormat : 'MMMM Do YYYY, h:mm a', dateInputFormat: 'MMMM Do YYYY, h:mm a'}"
+                bsDaterangepicker>
+              <div>
+                <div class="calendar-toggle"
+                  (click)="toggleDepartureOpenState()">
+                  <i i-bs
+                    class="icon-place"
+                    name="calendar-fill"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <app-flight-purchase></app-flight-purchase>
+
+    <app-graph-chart></app-graph-chart>
+  </div>
+
+  <div class="m-auto mt-4">
+    <scatter-chart></scatter-chart>
+  </div>
+
+
+
+  <!-- <ag-grid-angular #agGrid
             id="myGrid"
             class="ag-theme-alpine-dark"
             (gridReady)="onGridReady($event)"
@@ -42,10 +88,7 @@
             [columnDefs]="columnDefs"
             (columnResized)="onColumnResized($event)"
             [rowData]="rowData">
-          </ag-grid-angular>
-        </div>
-      </ng-template>
-    </li>
-  </ul>
-  <div [ngbNavOutlet]="nav"></div>
+          </ag-grid-angular> 
+</div>-->
+
 </div>

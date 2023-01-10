@@ -1,0 +1,12 @@
+   <div class="m-auto mt-2"
+     *ngIf="(purchaseHistoryService.transactionDataBehaviorSubject$ | async)?.length > 0">
+     <ag-grid-angular #agGrid
+       id="aGrid"
+       class="ag-theme-alpine"
+       (gridReady)="onGridReady($event)"
+       [gridOptions]="gridOptions"
+       [getRowHeight]="getRowHeight"
+       [columnDefs]="columnDefs"
+       [rowData]="purchaseHistoryService.transactionDataBehaviorSubject$ | async">
+     </ag-grid-angular>
+   </div>

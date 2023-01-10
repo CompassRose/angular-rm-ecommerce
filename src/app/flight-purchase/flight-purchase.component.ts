@@ -5,7 +5,6 @@ import { GridApi, GridOptions } from "ag-grid-community";
 //import * as moment from 'moment-timezone';
 import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms'
 import { formatDate } from '@angular/common';
-import { DateTimePickerComponent } from "../date-time-picker/date-time-picker.component";
 import { DatePipe } from '@angular/common';
 import { ContinousColors } from '../constants';
 
@@ -22,6 +21,8 @@ import {
   ValueParserParams,
   RowModelType,
 } from 'ag-grid-community';
+
+import { PurchaseHistoryService } from '../purchase-history.service';
 
 
 export const DateTimeValidator = (fc: FormControl) => {
@@ -68,7 +69,7 @@ export const DateTimeValidator = (fc: FormControl) => {
   selector: 'app-flight-purchase',
   templateUrl: './flight-purchase.component.html',
   styleUrls: ['./flight-purchase.component.scss'],
-  providers: [DatePipe, DateTimePickerComponent]
+  providers: [DatePipe]
 })
 
 export class FlightPurchaseComponent implements OnInit, AfterViewInit {
@@ -76,9 +77,9 @@ export class FlightPurchaseComponent implements OnInit, AfterViewInit {
 
   public columnDefs: ColDef[] = [
     {
-      headerName: 'Idx',
+      headerName: 'Id',
       field: 'index',
-      width: 70,
+      width: 50,
       floatingFilter: false,
       sortable: true,
     },
@@ -96,17 +97,22 @@ export class FlightPurchaseComponent implements OnInit, AfterViewInit {
     {
       headerName: 'Anc',
       field: 'ancillary',
-      width: 90,
+      width: 60,
       floatingFilter: false,
       // filter: 'agNumberColumnFilter',
-      sortable: true
+      sortable: true,
+      cellStyle: function (params) {
+        const test = Math.round(Math.floor(params.value * 10 / 100))
+        return { color: 'black', backgroundColor: ContinousColors[5].value[test] };
+      }
     },
     {
       headerName: 'Transaction Time',
       field: 'transactionTime',
       floatingFilter: false,
       sortable: true,
-      valueFormatter: this.dateFormatter
+      valueFormatter: this.dateFormatter,
+      width: 155
     },
     {
       headerName: "Flight #",
@@ -127,30 +133,40 @@ export class FlightPurchaseComponent implements OnInit, AfterViewInit {
       width: 105
     },
     {
-      headerName: "Destination",
+      headerName: "Dest",
       field: "destination",
       //filter: 'agNumberColumnFilter',
       floatingFilter: false,
       //suppressSizeToFit: true,
       sortable: true,
-      width: 105
+      width: 95
     },
     {
       headerName: "Num Seats",
       field: "quantitySeats",
       floatingFilter: false,
-      //filter: 'agNumberColumnFilter',
       sortable: true,
       cellClass: 'rag-amber',
       //suppressSizeToFit: true,
       width: 105
     },
     {
+      headerName: "Base Fare",
+      field: "baseFare",
+      floatingFilter: false,
+      sortable: true,
+      cellClass: 'my-class',
+      suppressSizeToFit: true,
+      cellRenderer: (params: any) => {
+        return `$${params.data.baseFare}`
+      },
+      width: 115
+    },
+    {
       headerName: "Avg Seat Fare",
       field: "averageSeatFare",
       floatingFilter: false,
-      //filter: 'agNumberColumnFilter',
-      //sortable: true,
+      sortable: true,
       cellClass: 'my-class',
       suppressSizeToFit: true,
       cellRenderer: (params: any) => {
@@ -163,22 +179,22 @@ export class FlightPurchaseComponent implements OnInit, AfterViewInit {
       field: "averageSeatUpgrade",
       //sortable: true,
       floatingFilter: false,
-      filter: 'agNumberColumnFilter',
       cellClass: 'my-class',
       cellRenderer: (params: any) => {
         return `$${params.data.averageSeatUpgrade}`
-      }
+      },
+      width: 115
     },
     {
       headerName: "Avg Seat Discount",
       field: "averageSeatDiscount",
       //sortable: true,
       floatingFilter: false,
-      filter: 'agNumberColumnFilter',
       cellClass: 'my-class',
       cellRenderer: (params: any) => {
         return `$${params.data.averageSeatDiscount}`
-      }
+      },
+      width: 115
     },
     {
       headerName: "Avg Other Upgrade",
@@ -187,7 +203,8 @@ export class FlightPurchaseComponent implements OnInit, AfterViewInit {
       cellClass: 'my-class',
       cellRenderer: (params: any) => {
         return `$${params.data.averageOtherUpgrade}`
-      }
+      },
+      width: 125
     },
     {
       headerName: "Total Offer",
@@ -204,12 +221,11 @@ export class FlightPurchaseComponent implements OnInit, AfterViewInit {
       cellClass: 'my-class',
       width: 165
     },
-
   ];
 
-  public rangeSelector: FormGroup;
-  public transactionData: any[] = [];
-  public transactionDataBehaviorSubject$ = new BehaviorSubject<any[]>([]);
+
+  // public transactionData: any[] = [];
+  //public transactionDataBehaviorSubject$ = new BehaviorSubject<any[]>([]);
   public gridColumnApi: any;
   public stringDateModel: string = new Date().toString();
   public dateFromModel: Date = new Date();
@@ -234,81 +250,19 @@ export class FlightPurchaseComponent implements OnInit, AfterViewInit {
   public gridApi: GridApi;
 
 
+  constructor(public purchaseHistoryService: PurchaseHistoryService, private datePipe: DatePipe, private formBuilder: FormBuilder) {
 
-  constructor(public dateTimePickerComponent: DateTimePickerComponent, private datePipe: DatePipe, private formBuilder: FormBuilder) {
-
-    this.startTime = moment('01/01/2020, 11:00 AM', "M/D/YYYY hh:mm A").format('M/D/YYYY hh:mm A');
-
+    //this.startTime = moment('01/01/2020, 11:00 AM', "M/D/YYYY hh:mm A").format('M/D/YYYY hh:mm A');
   }
 
 
   ngOnInit(): void {
+
   }
 
   public ngAfterViewInit(): void {
-
-
-    // this.rangeSelector.valueChanges
-    //   .pipe(
-    //     debounceTime(1220),
-    //     distinctUntilChanged(),
-    //     tap((event) => {
-    //       let metricHolder = [];
-    //       let holderAry = [];
-
-
-
-    //       setTimeout(() => {
-    //         Object.entries(event).forEach((d: any, i) => {
-    //           if (d[1] !== '' && d[1].length < 4) {
-    //             metricHolder.push(d);
-    //           } else if (d[1].length > 3) {
-    //             //console.log('YES DATE ', d[1])
-    //           }
-    //         })
-
-    //         holderAry = [];
-
-    //         this.transactionData.map((word, j) => {
-
-    //           let lgth = 0;
-    //           metricHolder.forEach((d: any, i) => {
-    //             if (word[d[0]] === d[1]) {
-    //               lgth++;
-    //               console.log(' lgth ', lgth)
-
-    //             } else {
-    //               //console.log('           NOPE  i', i, ' j ', j, ' word[d[0]] ', word[d[0]], ' d ', d[1])
-    //             }
-    //           })
-    //           if (lgth === metricHolder.length) {
-    //             holderAry.push(word)
-    //           }
-    //         })
-
-    //         this.transactionData = holderAry;
-    //         //console.log('||||||   ', this.transactionData)
-    //         this.transactionDataBehaviorSubject$.next(holderAry)
-    //       })
-
-    //     })
-    //   )
-    //   .subscribe()
+    // this.createForm()
   }
-
-  public createForm() {
-
-    //console.log('NEW ', new Date(), ' startTime ', this.startTime)
-    // this.rangeSelector = this.formBuilder.group({
-    //   origin: new FormControl('', [Validators.required]),
-    //   destination: new FormControl('', [Validators.required]),
-    //   transactionTimeFrom: new FormControl('', [Validators.required]),
-    //   transactionTimeTo: new FormControl('', [Validators.required]),
-    //   departureDateFrom: new FormControl(this.startTime, { validators: [Validators.required, DateTimeValidator] }),
-    //   departureDateTo: new FormControl(this.endTime, { validators: [Validators.required, DateTimeValidator] })
-    // });
-  }
-
 
   public cellStyle(params: CellClassParams) {
     //console.log('cellStyle ', params.data.loadFactor)
@@ -329,6 +283,28 @@ export class FlightPurchaseComponent implements OnInit, AfterViewInit {
     }
   }
 
+
+
+
+  public getRowHeight: (
+    params: RowHeightParams) => number | undefined | null = (params: RowHeightParams) => {
+      return 40;
+    };
+
+
+  public onGridReady(params: any) {
+    console.log('onGridReady ', params)
+
+    this.gridApi = params.api;
+    // setTimeout(() => {
+    //     this.gridColumnApi = params.columnApi;
+    //     this.gridApi.setColumnDefs(this.columnDefs);
+    //     this.gridApi.setRowData(this.filteredData);
+    //     this.gridApi.resetRowHeights();
+    //     this.gridColumnApi.autoSizeColumns()
+    //     this.gridApi.sizeColumnsToFit()
+    // }, 200);
+  }
 
 
   public dateFormatter(params: any) {

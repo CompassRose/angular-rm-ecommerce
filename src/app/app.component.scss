@@ -25,6 +25,26 @@
   }
 }
 
+.form-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  margin-bottom: 0.25rem;
+}
+
+.fill-field-input {
+  //border-radius: 5px;
+  //border-color: lightgray !important;
+}
+
 .form-style-row {
   display: flex;
   width: 100%;
@@ -42,5 +62,34 @@
   .pass-select-value {
     line-height: 28px;
     min-width: 240px;
+  }
+}
+
+.date-time-container {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+
+  .dt-results {
+    display: flex;
+    width: 100%;
+
+    .fill-field {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+
+    .calendar-toggle {
+      padding: 1px 10px 5px;
+      background-color: blue;
+      color: white;
+      cursor: pointer;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+
+      .icon-place {
+        //bottom: 4px;
+      }
+    }
   }
 }

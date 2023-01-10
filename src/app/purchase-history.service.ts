@@ -1,10 +1,9 @@
-import { Injectable, AfterViewInit } from '@angular/core';
+import { Injectable, AfterViewInit, OnInit } from '@angular/core';
 import { DashboardApi } from './dashboard.api';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, tap } from 'rxjs';
 import { FormGroup, FormControl, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { DatePipe } from '@angular/common';
-import { DateTimePickerComponent } from "./date-time-picker/date-time-picker.component";
 
 import * as moment from 'moment';
 import 'moment-timezone';
@@ -55,12 +54,12 @@ export const filterParams = {
 })
 
 
-export class PurchaseHistoryService implements AfterViewInit {
+export class PurchaseHistoryService implements AfterViewInit, OnInit {
 
   public transactionData: any[] = [];
   public transactionDataBehaviorSubject$ = new BehaviorSubject<any[]>([]);
 
-  public rangeSelector: FormGroup;
+
 
   public gridColumnApi: any;
   public stringDateModel: string = new Date().toString();
@@ -71,15 +70,17 @@ export class PurchaseHistoryService implements AfterViewInit {
   public transactionDate: any;
   public transactionDateTo: any;
 
-  public departureDate: any;
+  public departureDateFrom: any;
   public departureDateTo: any;
+
+  public rangeForm: FormGroup;
 
   // public endDate: any;
 
   //public startTime: any;
   //public endTime: any;
 
-  constructor(private dashboardAPI: DashboardApi, dateTimePickerComponent: DateTimePickerComponent) {
+  constructor(private dashboardAPI: DashboardApi, private fb: FormBuilder) {
 
     this.dashboardAPI.getTransactions()
       .subscribe(response => {
@@ -130,65 +131,27 @@ export class PurchaseHistoryService implements AfterViewInit {
 
           return t
         })
-        console.log('XXXXX ', this.transactionData[0].transactionTime)
+        console.log('XXXXX ', this.transactionData[0])
 
         this.transactionDate = this.transactionData[0].transactionTime;
 
-        this.departureDate = this.transactionData[0].transactionTime;
+        this.departureDateFrom = this.transactionData[0].transactionTime;
 
         this.departureDateTo = this.transactionData[this.transactionData.length - 1].transactionTime;
 
         this.transactionDataBehaviorSubject$.next(this.transactionData);
 
 
-
-
-        // let timer = moment('01/01/2020, 11:00 AM', "M/D/YYYY hh:mm A");
-
-        // let durationToAdd = moment.duration(30, 'minutes');
-        // let dayToAdd = moment.duration(1, 'day');
-        // let dayHolder: any;
-        // let dayTemp: any;
-
-        // let monthsToAdd = moment.duration(60, 'days');
-
-        // const monthsHolder = timer.add(monthsToAdd).format('M/D hh:mm A');
-
-        // let monthsCalc = moment(`${monthsHolder}, 11:00 AM`, "M/D hh:mm A");
-
-
-        // this.transactionData.map((t, i) => {
-
-        //   t.totalPurchase = this.totalValueFormatter(t);
-
-
-
-        //   if (i % 120 === 0) {
-        //     dayHolder = timer.add(dayToAdd).format('M/D/YYYY');
-        //     dayTemp = moment(`${dayHolder}, 11:00 AM`, "M/D hh:mm A");
-        //     t.transactionTime = moment(dayTemp).format("M/D hh:mm A");
-
-        //   } else {
-
-        //     const timeHolder = dayTemp.add(durationToAdd).format('M/D hh:mm A');
-
-
-        //     const newMonths = monthsCalc.add(durationToAdd).format('M/D hh:mm A');
-
-        //     t.transactionTime = timeHolder;
-
-        //     t.departureTime = newMonths;
-        //     console.log('t.transactionTime ', t.transactionTime, ' t.departureTime', t.departureTime)
-        //   }
-
-        //   return t
-        // })
-
-        //console.log('Service transactionData ', this.transactionData)
       })
 
   }
 
+  public ngOnInit(): void {
+    // this.rangeForm = this.fb.group({
+    //   date: null,
+    //   range: null
+    // });
+  }
 
   public totalBaseFareFormatter() {
 
@@ -201,56 +164,12 @@ export class PurchaseHistoryService implements AfterViewInit {
     return rndInt;
   }
 
+
+
   public ngAfterViewInit(): void {
 
-    // this.rangeSelector.valueChanges
-    //   .pipe(
-    //     debounceTime(1220),
-    //     distinctUntilChanged(),
-    //     tap((event) => {
-    //       let metricHolder = [];
-    //       let holderAry = [];
 
-
-
-    //       setTimeout(() => {
-    //         Object.entries(event).forEach((d: any, i) => {
-    //           if (d[1] !== '' && d[1].length < 4) {
-    //             metricHolder.push(d);
-    //           } else if (d[1].length > 3) {
-    //             //console.log('YES DATE ', d[1])
-    //           }
-    //         })
-
-    //         holderAry = [];
-
-    //         this.transactionData.map((word, j) => {
-
-    //           let lgth = 0;
-    //           metricHolder.forEach((d: any, i) => {
-    //             if (word[d[0]] === d[1]) {
-    //               lgth++;
-    //               console.log(' lgth ', lgth)
-
-    //             } else {
-    //               //console.log('           NOPE  i', i, ' j ', j, ' word[d[0]] ', word[d[0]], ' d ', d[1])
-    //             }
-    //           })
-    //           if (lgth === metricHolder.length) {
-    //             holderAry.push(word)
-    //           }
-    //         })
-
-    //         this.transactionData = holderAry;
-    //         //console.log('||||||   ', this.transactionData)
-    //         this.transactionDataBehaviorSubject$.next(holderAry);
-    //       })
-
-    //     })
-    //   )
-    //   .subscribe()
   }
-
 
 
   public totalValueFormatter(values: any) {
